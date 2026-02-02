@@ -7,6 +7,9 @@ Este projeto implementa um modelo de rede neural convolucional(CNN) treinado no 
 - Cloud Run - Containers serverless
 - Cloud Functions - Funções serverless orientadas a eventos
 
+# 📋 Visão Geral
+Este projeto demonstra o ciclo completo de desenvolvimento de um modelo de deep learning, desde o treinamento até a implantação em diferentes serviços da Google Cloud Platform.
+
 # ✨ Funcionalidades
 - Modelo CNN de Alta Precisão: Arquitetura CNN personalizada com ~85% de acurácia no CIFAR-10
 - Implantação Multi-Cloud: Código único implantado em 5 serviços GCP
