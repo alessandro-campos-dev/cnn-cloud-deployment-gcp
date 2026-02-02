@@ -1,4 +1,4 @@
-# 🎯 Visão Geral - CNN com deploy em múltiplos serviços GCP
+# 🎯 CNN com deploy em múltiplos serviços GCP
 Este projeto implementa um modelo de rede neural convolucional(CNN) treinado no dataset CIFAR-10 para classificação de imagens em 10 categorias. O sistema é projetado com princípios cloud-native e demonstra implantação em cinco serviços diferentes da GCP:
 
 - Google Compute Engine (GCE) - Máquinas virtuais
