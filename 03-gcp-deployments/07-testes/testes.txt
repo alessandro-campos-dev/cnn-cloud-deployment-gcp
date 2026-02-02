@@ -1,0 +1,8 @@
+# Testes unitários
+pytest tests/unit/
+
+# Testes de integração
+pytest tests/integration/
+
+# Todos os testes com cobertura
+pytest --cov=src tests/

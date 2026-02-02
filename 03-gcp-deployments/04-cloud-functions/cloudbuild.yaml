@@ -1,0 +1,48 @@
+steps:
+  # Deploy HTTP Cloud Function
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'cnn-classifier-predict'
+      - '--runtime'
+      - 'python311'
+      - '--trigger-http'
+      - '--allow-unauthenticated'
+      - '--region'
+      - 'southamerica-east1'
+      - '--memory'
+      - '512MB'
+      - '--timeout'
+      - '300s'
+      - '--max-instances'
+      - '10'
+      - '--entry-point'
+      - 'predict_image'
+      - '--source'
+      - 'src/gcp-deployments/cloud-functions/'
+      - '--update-env-vars'
+      - 'MODEL_PATH=cifar10_model.keras'
+  
+  # Deploy background function (optional)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'functions'
+      - 'deploy'
+      - 'cnn-classifier-batch'
+      - '--runtime'
+      - 'python311'
+      - '--trigger-topic'
+      - 'image-classification-tasks'
+      - '--region'
+      - 'southamerica-east1'
+      - '--memory'
+      - '512MB'
+      - '--timeout'
+      - '540s'
+      - '--entry-point'
+      - 'predict_image_base64'
+      - '--source'
+      - 'src/gcp-deployments/cloud-functions/'

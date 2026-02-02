@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cnn-classifier-service
+  namespace: default
+  labels:
+    app: cnn-classifier
+    service: cnn-classifier
+spec:
+  type: LoadBalancer
+  selector:
+    app: cnn-classifier
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 8080
+    protocol: TCP
+  externalTrafficPolicy: Local
+  sessionAffinity: None

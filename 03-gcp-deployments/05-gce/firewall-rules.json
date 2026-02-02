@@ -1,0 +1,18 @@
+{
+  "name": "cnn-classifier-firewall",
+  "description": "Firewall rules for CNN Image Classifier",
+  "network": "global/networks/default",
+  "allowed": [
+    {
+      "IPProtocol": "tcp",
+      "ports": ["8080", "80", "443"]
+    },
+    {
+      "IPProtocol": "tcp",
+      "ports": ["22"]
+    }
+  ],
+  "sourceRanges": ["0.0.0.0/0"],
+  "targetTags": ["cnn-classifier"],
+  "priority": 1000
+}

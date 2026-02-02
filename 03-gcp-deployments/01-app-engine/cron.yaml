@@ -1,0 +1,15 @@
+cron:
+- description: "Daily health check"
+  url: /_ah/health
+  target: default
+  schedule: every 5 minutes
+  
+- description: "Cleanup temporary files"
+  url: /cleanup
+  target: default
+  schedule: every 24 hours
+  
+- description: "Model performance monitoring"
+  url: /monitor
+  target: default
+  schedule: every 1 hours

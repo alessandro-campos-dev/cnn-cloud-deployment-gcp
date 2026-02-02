@@ -1,0 +1,56 @@
+{
+  "name": "cnn-classifier-template",
+  "description": "Template for CNN Image Classifier VM instances",
+  "properties": {
+    "machineType": "e2-medium",
+    "tags": {
+      "items": ["cnn-classifier", "http-server", "https-server"]
+    },
+    "disks": [
+      {
+        "deviceName": "boot",
+        "type": "PERSISTENT",
+        "boot": true,
+        "autoDelete": true,
+        "initializeParams": {
+          "sourceImage": "projects/debian-cloud/global/images/family/debian-11",
+          "diskSizeGb": "20",
+          "diskType": "pd-standard"
+        }
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "network": "global/networks/default",
+        "accessConfigs": [
+          {
+            "name": "External NAT",
+            "type": "ONE_TO_ONE_NAT"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "items": [
+        {
+          "key": "startup-script",
+          "value": "#!/bin/bash\ncurl -sSL https://raw.githubusercontent.com/your-username/ia_image_classifier/main/src/gcp-deployments/gce/startup-script.sh | bash"
+        }
+      ]
+    },
+    "serviceAccounts": [
+      {
+        "email": "default",
+        "scopes": [
+          "https://www.googleapis.com/auth/cloud-platform",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring.write"
+        ]
+      }
+    ],
+    "labels": {
+      "app": "cnn-classifier",
+      "environment": "production"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cnn-classifier-deployment
+  namespace: default
+  labels:
+    app: cnn-classifier
+    version: v1.0.0
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cnn-classifier
+  template:
+    metadata:
+      labels:
+        app: cnn-classifier
+        version: v1.0.0
+    spec:
+      containers:
+      - name: cnn-classifier
+        image: gcr.io/YOUR_PROJECT_ID/cnn-classifier:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: MODEL_PATH
+          value: "/app/src/cnn-model/saved_models/cifar10_model.keras"
+        - name: TEMPLATE_FOLDER
+          value: "/app/templates"
+        - name: LOG_LEVEL
+          value: "INFO"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        volumeMounts:
+        - name: uploads-volume
+          mountPath: /tmp/uploads
+      volumes:
+      - name: uploads-volume
+        emptyDir: {}
+      imagePullSecrets:
+      - name: gcr-json-key

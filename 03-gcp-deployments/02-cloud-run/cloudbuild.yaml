@@ -1,0 +1,70 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--tag'
+      - 'gcr.io/$PROJECT_ID/cnn-classifier:$COMMIT_SHA'
+      - '--tag'
+      - 'gcr.io/$PROJECT_ID/cnn-classifier:latest'
+      - '-f'
+      - 'src/gcp-deployments/cloud-run/Dockerfile'
+      - '.'
+  
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/cnn-classifier:$COMMIT_SHA'
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'cnn-classifier'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/cnn-classifier:$COMMIT_SHA'
+      - '--region'
+      - 'southamerica-east1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '10'
+      - '--min-instances'
+      - '0'
+      - '--timeout'
+      - '300s'
+      - '--concurrency'
+      - '80'
+  
+  # Optional: Deploy to a second region for redundancy
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'cnn-classifier-us'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/cnn-classifier:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+
+images:
+  - 'gcr.io/$PROJECT_ID/cnn-classifier:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/cnn-classifier:latest'
+
+timeout: 1200s
